@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "PooledObject.h"
 #include "Components/ArrowComponent.h"
+#include "EndlessRunnerGame/FDifficultySetting.h"
 #include "GameFramework/Actor.h"
 #include "ALevelPiece.generated.h"
 
@@ -36,10 +37,16 @@ public:
 	TObjectPtr<UArrowComponent> Arrow;
 
 	UPROPERTY(EditDefaultsOnly, Category="Setup")
+	TObjectPtr<UArrowComponent> ProjectileSpawn;	
+	
+	UPROPERTY(EditDefaultsOnly, Category="Setup")
 	TArray<FString> SocketNames;
 
 	UPROPERTY(EditAnywhere, Category="Setup")
 	FString NameIdentifier;
+
+	UPROPERTY(EditInstanceOnly, Category="Details Ref")
+	TSubclassOf<AActor> Projectile;
 
 	FString GetCorrectName(EPieceType pieceType);
 	//void Initialize(ASpawnManager* self);
@@ -52,4 +59,5 @@ protected:
 
 public:
 	float MovePiece(float MovementSpeed, float DeltaTime);
+	//sfloat SpawnPiece(FDifficultySetting CurrentSetting);
 };

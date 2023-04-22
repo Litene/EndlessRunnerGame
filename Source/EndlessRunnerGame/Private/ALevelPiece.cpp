@@ -3,6 +3,8 @@
 
 #include "ALevelPiece.h"
 
+#include "DiffResults.h"
+
 
 AALevelPiece::AALevelPiece() {
 	PrimaryActorTick.bCanEverTick = false;
@@ -13,6 +15,9 @@ AALevelPiece::AALevelPiece() {
 	Arrow->SetupAttachment(Mesh);
 	Arrow->AddLocalOffset(FVector(1000.0f, 0.0f, 0.0f));
 	Arrow->ArrowSize = 0.1f;
+	ProjectileSpawn = CreateDefaultSubobject<UArrowComponent>("ProjectileArrow");
+	ProjectileSpawn->SetupAttachment(Mesh);
+	ProjectileSpawn->AddLocalOffset(FVector(100.0f, 50.0f, 150.0f));
 	NameIdentifier = GetCorrectName(PieceType);
 }
 
@@ -34,15 +39,19 @@ FString AALevelPiece::GetCorrectName(EPieceType pieceType) { // move to  utility
 	return "";
 }
 
-void AALevelPiece::OnFinishedMoving() {
+void AALevelPiece::OnFinishedMoving() { // wrong remove
 	
 }
 
-void AALevelPiece::BeginPlay() {
+void AALevelPiece::BeginPlay() { // when is this called?
 	Super::BeginPlay();
+	UE_LOG(LogTemp, Warning, TEXT("CALLED"));
 }
+
+
 
 float AALevelPiece::MovePiece(float MovementSpeed, float DeltaTime) {
 	AddActorLocalOffset(FVector(-MovementSpeed * DeltaTime, 0,0));
 	return GetActorLocation().X;
 }
+

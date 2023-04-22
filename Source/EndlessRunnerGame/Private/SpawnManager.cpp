@@ -5,6 +5,7 @@
 #include "TimerManager.h"
 #include "Containers/UnrealString.h"
 #include "DebugMacros.h"
+#include "RollingBall.h"
 
 
 ASpawnManager::ASpawnManager() {
@@ -22,26 +23,47 @@ ASpawnManager::ASpawnManager() {
 void ASpawnManager::BeginPlay() {
 	Super::BeginPlay();
 
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 7; i++) {
 		// magic numbers, expose in settings in spawnmanager
-		SpawnSet();
+		SpawnSet(true);
 	}
 
 	GetWorldTimerManager().SetTimer(DifficultyTimerHandle, this, &ASpawnManager::IncreaseDifficulty, 5.0f, true);
 }
 
-void ASpawnManager::SpawnSet() {
+void ASpawnManager::SpawnSet(bool InitialSpawn) {
 	if (GetWorld()) {
 		for (int i = 0; i <= 2; i++) {
+			if (i == 0) { // this is messy, should break out into spawn method method, special conditions etc...
+				TObjectPtr<AALevelPiece> mySpawnedLeftWall = GetWorld()->SpawnActor<AALevelPiece>(Wall, GetOriginVector(i, Lanes[i]) + FVector(-0, -80,0), FRotator::ZeroRotator);
+				PiecesInPlay.Add(mySpawnedLeftWall);
+			}
+			else if (i == 2) {
+				TObjectPtr<AALevelPiece> mySpawnedRightWall = GetWorld()->SpawnActor<AALevelPiece>(Wall, GetOriginVector(i, Lanes[i]) + FVector(-0, 100,0), FRotator::ZeroRotator);
+				PiecesInPlay.Add(mySpawnedRightWall);
+			}
 			TObjectPtr<AALevelPiece> mySpawnedActor = GetWorld()->SpawnActor<AALevelPiece>(
 				GetRandomPiece(Lanes[i], AvailablePieces), GetOriginVector(i, Lanes[i]), FRotator::ZeroRotator);
 			Lanes[i].Add(mySpawnedActor);
 			PiecesInPlay.Add(mySpawnedActor);
+			if (!InitialSpawn && CheckSpawn(CurrentSetting.ChanceToSpawnBase)) {
+				TObjectPtr<ARollingBall> myRollingActor = GetWorld()->SpawnActor<ARollingBall>(
+					RollingBall, mySpawnedActor->ProjectileSpawn->GetComponentLocation(), FRotator::ZeroRotator);
+			}
 		}
 	}
 }
 
 void ASpawnManager::RemoveSet() {
+	// maybe?
+}
+
+void ASpawnManager::SpawnProjectile() {
+	// maybe?
+}
+
+bool ASpawnManager::CheckSpawn(int percentage) {
+	return (FMath::RandRange(1, 100 / percentage) == 1 ? true : false);
 }
 
 
@@ -96,10 +118,10 @@ void ASpawnManager::RemoveAndSpawnPiece() {
 	}
 	// Clear the PiecesToRemove array
 	PiecesToRemove.Empty();
-	
+
 
 	// Spawn new pieces
-	SpawnSet();
+	SpawnSet(false);
 }
 
 void ASpawnManager::IncreaseDifficulty() {
@@ -110,38 +132,16 @@ void ASpawnManager::IncreaseDifficulty() {
 
 
 void ASpawnManager::Tick(float DeltaTime) {
-	// fix timer... 
 	Super::Tick(DeltaTime);
-	// for (const TObjectPtr<AALevelPiece> Piece : PiecesInPlay) {
-	// 	if (const float XPosition = Piece->MovePiece(CurrentSetting.GetMoveSpeedAndTimeBetween().MoveSpeed, DeltaTime); XPosition < -200) { // magic numbers
-	// 		// this is extremely UNOPTIMIZED
-	// 		FTimerDelegate TimerCallback;
-	// 		TimerCallback.BindLambda([this, Piece]() {
-	// 			UE_LOG(LogTemp, Warning, TEXT("Removing piece %p"), Piece.Get());
-	// 			RemoveAndSpawnPiece(Piece);
-	// 		});
-	// 		GetWorldTimerManager().SetTimer(RespawnTimerHandle, TimerCallback, 1.0f, false);
-	// 	
-	// 	}
-	// }
 
 	for (const TObjectPtr<AALevelPiece> Piece : PiecesInPlay) {
 		const float XPosition = Piece->MovePiece(CurrentSetting.GetMoveSpeedAndTimeBetween().MoveSpeed, DeltaTime);
-		if (XPosition < -500 && !PiecesToRemove.Contains(Piece)) {
+		if (XPosition < -2000 && !PiecesToRemove.Contains(Piece)) {
 			PiecesToRemove.Add(Piece);
-			// Only call RemoveAndSpawnPiece() if it's not already queued up to be called
 			if (!GetWorldTimerManager().IsTimerActive(RespawnTimerHandle)) {
-				GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ASpawnManager::RemoveAndSpawnPiece, 0.01f, false);
+				GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ASpawnManager::RemoveAndSpawnPiece, 0.01f,
+				                                false);
 			}
 		}
 	}
-	
-	// for (const TObjectPtr<AALevelPiece> Piece : PiecesInPlay) {
-	// 	// change to callback this is in update which is crazy
-	// 	const float XPosition = Piece->MovePiece(CurrentSetting.GetMoveSpeedAndTimeBetween().MoveSpeed, DeltaTime);
-	// 	if (XPosition < -500 && !PiecesToRemove.Contains(Piece)) {
-	// 		PiecesToRemove.Add(Piece);
-	// 		GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ASpawnManager::RemoveAndSpawnPiece, 0.01f, false);
-	// 	}
-	// }
 }

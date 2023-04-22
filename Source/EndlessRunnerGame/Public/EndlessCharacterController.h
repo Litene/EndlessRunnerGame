@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/TimelineComponent.h"
 #include "DebugMacros.h"
+#include "Components/StaticMeshComponent.h"
 #include "EndlessRunnerGame/EndlessRunnerGameCharacter.h"
 #include "EndlessCharacterController.generated.h"
 
@@ -22,7 +23,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category="MyTimeline") class UCurveFloat* SmoothCurve;
 	UPROPERTY(EditAnywhere, Category="MyTimeline") class UTimelineComponent* MyTimeline; // raw pointer? why can't this be a smartpointer? 
-
+	
 	//Coyote Timer
 	
 	UFUNCTION() void TimelineFloatReturn(float Value); //event?

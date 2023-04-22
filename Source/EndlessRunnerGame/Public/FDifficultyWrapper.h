@@ -14,5 +14,5 @@ struct FDifficultyWrapper {
 	GENERATED_BODY()
 public:
 	float MoveSpeed = 0.0f;
-	float TimeInBetween = 0.0f;
+	int ChanceToSpawn = 0.0f;
 };

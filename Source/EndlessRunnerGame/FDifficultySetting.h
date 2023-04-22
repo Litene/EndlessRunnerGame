@@ -12,7 +12,7 @@ public:
 	FDifficultySetting();
 	FDifficultySetting(int difficulty);
 	int Difficulty;
-	float TimeInBetweenBase;
+	int ChanceToSpawnBase;
 	FDifficultyWrapper GetMoveSpeedAndTimeBetween() const;
 private:
 	

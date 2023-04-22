@@ -10,11 +10,11 @@ AEndlessCharacterController::AEndlessCharacterController() : StartLocation(FVect
                                                              CurrentPos(1), CurrentState(CharacterState::InLane) {
 	PrimaryActorTick.bCanEverTick = true;
 	MyTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("TimeLine"));
-
+	
 	InterpFunction.BindUFunction(this, FName("TimelineFloatReturn"));
 	InterpFinished.BindUFunction(this, FName("OnTimelineFinished"));
 
-	CameraBoom->SetRelativeRotation(FRotator(0, -20.0f, 0));
+	CameraBoom->SetRelativeRotation(FRotator(0, -40.0f, 0));
 	
 }
 
@@ -40,6 +40,8 @@ void AEndlessCharacterController::TimelineFloatReturn(float Value) {
 void AEndlessCharacterController::OnTimelineFinished() {
 	CurrentState = InLane;
 }
+
+
 
 
 void AEndlessCharacterController::Move(const FInputActionValue& Value) {
