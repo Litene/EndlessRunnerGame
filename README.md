@@ -6,6 +6,6 @@ The chance of spawning projectiles is also based on difficulty, which has a very
 Examples of effective C++ use:   
 * Repurposing the third-person controller instead of reinventing the wheel.  
 * Having managers responsible for the generation.  
-* Responsible for their defining their own behaviors is an example of object-oriented design.   
+* Objects are responsible for their defining their own behaviors is an example of object-oriented design.   
 * Data containers for ease of use, this was utilized by the difficulty.  
 
