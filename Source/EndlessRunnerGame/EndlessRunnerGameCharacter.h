@@ -22,7 +22,7 @@ class AEndlessRunnerGameCharacter : public ACharacter
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputMappingContext* DefaultMappingContext;
-
+	
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* JumpAction;
@@ -31,15 +31,34 @@ class AEndlessRunnerGameCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* MoveAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* P2MoveAction;
+	
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* P2JumpAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* EscapeGameOver;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* EnterGameOver;
+
 public:
 	AEndlessRunnerGameCharacter();
 	
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
+
+	UPROPERTY(VisibleAnywhere)
+	APlayerController* Player2Ref;
+
+	
+	void SetGameOverKeys(bool GameOver, AController* Controller);
 
 protected:
 
@@ -47,6 +66,13 @@ protected:
 	virtual void Move(const FInputActionValue& Value);
 
 	virtual void Jump() override;
+
+	virtual void P2Move(const FInputActionValue& Value);
+	virtual void P2Jump();
+	virtual void P2StopJump();
+	virtual void EscapeKey();
+	virtual void EnterKey();
+
 	/** Called for looking input */
 
 protected:
@@ -61,7 +87,10 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
 };
+
+
 
 inline void AEndlessRunnerGameCharacter::Jump() {
 	Super::Jump();

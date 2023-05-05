@@ -7,21 +7,28 @@
 #include "RollingBall.generated.h"
 
 UCLASS()
-class ENDLESSRUNNERGAME_API ARollingBall : public AActor {
+class ENDLESSRUNNERGAME_API ARollingBall : public AActor { // they need an identifier
+	
 	GENERATED_BODY()
-
 public:
-	// Sets default values for this actor's properties
 	ARollingBall();
+	float const BallRadie = 50.0f;
+	float MovementSpeed = 800.0f;
+	float LifeTime;
+	
+	UPROPERTY(VisibleAnywhere)
+	int32 Lane;
 
+	float Move(float Deltatime);
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Details Ref")
 	TObjectPtr<UStaticMeshComponent> Mesh;
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	                    int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	virtual void Tick(float DeltaTime) override;
 };

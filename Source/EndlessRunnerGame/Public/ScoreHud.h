@@ -23,13 +23,20 @@ public:
 	class UTextBlock* ScoreText; 
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	UImage* HeartOne;
+	UImage* HeartOneP1;
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	UImage* HeartTwo;
+	UImage* HeartOneP2;
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	UImage* HeartThree;
+	UImage* HeartTwoP1;
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UImage* HeartTwoP2;
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UImage* HeartThreeP1;
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UImage* HeartThreeP2;
 
-	TArray<UImage*> Hearts;
+	TArray<UImage*> HeartsP1;
+	TArray<UImage*> HeartsP2;
 	
 	UPROPERTY(EditAnywhere, Category="Ref")
 	class UTexture2D* HeartEmpty;
@@ -37,7 +44,7 @@ public:
 	class UTexture2D* HeartFull;
 	
 	void UpdateScore(int Score);
-	void RemoveLife(int CurrentLife);
+	void RemoveLife(int CurrentLife, int PlayerID);
 	void HealLife();
 	
 	const FString ScoreBase = "Score: ";

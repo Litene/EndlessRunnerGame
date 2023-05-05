@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EndlessRunnerGameCharacter.h"
 #include "GameFramework/GameModeBase.h"
 #include "EndlessRunnerGameGameMode.generated.h"
 
@@ -13,6 +14,10 @@ class AEndlessRunnerGameGameMode : public AGameModeBase
 
 public:
 	AEndlessRunnerGameGameMode();
+
+	virtual void BeginPlay() override;
+
+	AEndlessRunnerGameCharacter* TwoPlayer;
 };
 
 

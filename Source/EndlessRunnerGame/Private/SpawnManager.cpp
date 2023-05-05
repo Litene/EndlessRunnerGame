@@ -18,6 +18,9 @@ ASpawnManager::ASpawnManager() {
 	Lanes.Add(LaneOne);
 	Lanes.Add(LaneTwo);
 	Lanes.Add(LaneThree);
+	Lanes.Add(LaneFour);
+	Lanes.Add(LaneFive);
+	Lanes.Add(LaneSix);
 }
 
 void ASpawnManager::BeginPlay() {
@@ -33,13 +36,21 @@ void ASpawnManager::BeginPlay() {
 
 void ASpawnManager::SpawnSet(bool InitialSpawn) {
 	if (GetWorld()) {
-		for (int i = 0; i <= 2; i++) {
-			if (i == 0) { // this is messy, should break out into spawn method method, special conditions etc...
-				TObjectPtr<AALevelPiece> mySpawnedLeftWall = GetWorld()->SpawnActor<AALevelPiece>(Wall, GetOriginVector(i, Lanes[i]) + FVector(-0, -80,0), FRotator::ZeroRotator);
+		for (int i = 0; i <= 5; i++) {
+			if (i == 0) {
+				// this is messy, should break out into spawn method method, special conditions etc...
+				TObjectPtr<AALevelPiece> mySpawnedLeftWall = GetWorld()->SpawnActor<AALevelPiece>(
+					Wall, GetOriginVector(i, Lanes[i]) + FVector(-0, -80, 0), FRotator::ZeroRotator);
 				PiecesInPlay.Add(mySpawnedLeftWall);
 			}
 			else if (i == 2) {
-				TObjectPtr<AALevelPiece> mySpawnedRightWall = GetWorld()->SpawnActor<AALevelPiece>(Wall, GetOriginVector(i, Lanes[i]) + FVector(-0, 100,0), FRotator::ZeroRotator);
+				TObjectPtr<AALevelPiece> mySpawnedRightWall = GetWorld()->SpawnActor<AALevelPiece>(
+					Wall, GetOriginVector(i, Lanes[i]) + FVector(-0, 100, 0), FRotator::ZeroRotator);
+				PiecesInPlay.Add(mySpawnedRightWall);
+			}
+			else if (i == 5) {
+				TObjectPtr<AALevelPiece> mySpawnedRightWall = GetWorld()->SpawnActor<AALevelPiece>(
+					Wall, GetOriginVector(i, Lanes[i]) + FVector(-0, 100, 0), FRotator::ZeroRotator);
 				PiecesInPlay.Add(mySpawnedRightWall);
 			}
 			TObjectPtr<AALevelPiece> mySpawnedActor = GetWorld()->SpawnActor<AALevelPiece>(
@@ -49,6 +60,7 @@ void ASpawnManager::SpawnSet(bool InitialSpawn) {
 			if (!InitialSpawn && CheckSpawn(CurrentSetting.ChanceToSpawnBase)) {
 				TObjectPtr<ARollingBall> myRollingActor = GetWorld()->SpawnActor<ARollingBall>(
 					RollingBall, mySpawnedActor->ProjectileSpawn->GetComponentLocation(), FRotator::ZeroRotator);
+				//ProjectilesInPlay.Add(myRollingActor);
 			}
 		}
 	}
@@ -97,6 +109,10 @@ FVector ASpawnManager::GetOriginVector(int laneNumber, TArray<TObjectPtr<AALevel
 		case 0: return FVector(0, -100, 0);
 		case 1: return FVector(0, 0, 0);
 		case 2: return FVector(0, 100, 0);
+		case 3: return FVector(0, 280, 0);
+		case 4: return FVector(0, 380, 0);
+		case 5: return FVector(0, 480, 0);
+		case 6: return FVector(0, 580, 0);
 		default: ;
 		}
 	}
@@ -122,6 +138,21 @@ void ASpawnManager::RemoveAndSpawnPiece() {
 
 	// Spawn new pieces
 	SpawnSet(false);
+}
+
+void ASpawnManager::RemoveProjectile() { // scrap
+	TArray<TObjectPtr<ARollingBall>> CopyArray;
+	for (auto AARollingBall : ProjectilesToRemove) {
+		CopyArray.Add(AARollingBall);
+	}
+	for (TObjectPtr<ARollingBall> Ball : CopyArray) {
+		if (Ball && Ball->GetWorld()) {
+			if (/*Ball->Destroy()*/true) {
+				//ProjectilesInPlay.Remove(Ball);
+			}
+		}
+	}
+	//ProjectilesToRemove.Empty();
 }
 
 void ASpawnManager::IncreaseDifficulty() {

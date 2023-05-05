@@ -35,6 +35,9 @@ public:
 	TArray<TObjectPtr<AALevelPiece>> LaneOne;
 	TArray<TObjectPtr<AALevelPiece>> LaneTwo;
 	TArray<TObjectPtr<AALevelPiece>> LaneThree;
+	TArray<TObjectPtr<AALevelPiece>> LaneFour;
+	TArray<TObjectPtr<AALevelPiece>> LaneFive;
+	TArray<TObjectPtr<AALevelPiece>> LaneSix;
 
 protected:
 	virtual void BeginPlay() override;
@@ -42,6 +45,8 @@ protected:
 private:
 	FDifficultySetting CurrentSetting;
 	TArray<FDifficultySetting> Settings;
+	TArray<TObjectPtr<ARollingBall>> ProjectilesInPlay;
+	TArray<TObjectPtr<ARollingBall>> ProjectilesToRemove;
 
 	void SpawnSet(bool InitialSpawn);
 	void RemoveSet();
@@ -53,6 +58,9 @@ private:
 	FVector GetOriginVector(int laneNumber, TArray<TObjectPtr<AALevelPiece>> lane);
 	void RemoveAndSpawnPiece();
 	void IncreaseDifficulty();
+	void RemoveProjectile();
+	
 	FTimerHandle RespawnTimerHandle;
+	FTimerHandle ProjectileTimerHandle;
 	FTimerHandle DifficultyTimerHandle;
 };

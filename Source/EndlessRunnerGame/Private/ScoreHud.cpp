@@ -8,17 +8,22 @@
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 
-void UScoreHud::InitializeHud() { // call in begin play of GameManager
+void UScoreHud::InitializeHud() {
+	// call in begin play of GameManager
 
 
-	Hearts.Add(HeartOne);
-	Hearts.Add(HeartTwo);
-	Hearts.Add(HeartThree);
+	HeartsP1.Add(HeartOneP1);
+	HeartsP1.Add(HeartTwoP1);
+	HeartsP1.Add(HeartThreeP1);
+
+	HeartsP2.Add(HeartOneP2);
+	HeartsP2.Add(HeartTwoP2);
+	HeartsP2.Add(HeartThreeP2);
 	HealLife();
-	
 }
 
-void UScoreHud::UpdateScore(int Score) { // call every tick with int conversion?
+void UScoreHud::UpdateScore(int Score) {
+	// call every tick with int conversion?
 	FString scoreText = "";
 	scoreText.Append(ScoreBase);
 	scoreText.Append(FString::FromInt(Score));
@@ -29,13 +34,22 @@ void UScoreHud::UpdateScore(int Score) { // call every tick with int conversion?
 	// }
 }
 
-void UScoreHud::RemoveLife(int CurrentLife) { // invoke even from game Manager. 
+void UScoreHud::RemoveLife(int CurrentLife, int PlayerID) {
+	// invoke even from game Manager. 
 	const int32 ClampedLife = FMath::Clamp(CurrentLife, 0, 2);
-	Hearts[ClampedLife]->SetBrushFromTexture(HeartEmpty);
+	if (PlayerID == 0) {
+		HeartsP1[ClampedLife]->SetBrushFromTexture(HeartEmpty);
+	}
+	else if (PlayerID == 1) {
+		HeartsP2[ClampedLife]->SetBrushFromTexture(HeartEmpty);
+	}
 }
 
 void UScoreHud::HealLife() {
-	for (UImage* Heart : Hearts) {
+	for (UImage* Heart : HeartsP1) {
+		Heart->SetBrushFromTexture(HeartFull);
+	}
+	for (UImage* Heart : HeartsP2) {
 		Heart->SetBrushFromTexture(HeartFull);
 	}
 }

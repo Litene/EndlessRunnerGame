@@ -45,7 +45,7 @@ void AALevelPiece::OnFinishedMoving() { // wrong remove
 
 void AALevelPiece::BeginPlay() { // when is this called?
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("CALLED"));
+//	UE_LOG(LogTemp, Warning, TEXT("CALLED"));
 }
 
 

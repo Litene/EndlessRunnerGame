@@ -21,21 +21,32 @@ class ENDLESSRUNNERGAME_API AEndlessCharacterController : public AEndlessRunnerG
 public:
 	AEndlessCharacterController();
 
-	UPROPERTY(EditAnywhere, Category="MyTimeline") class UCurveFloat* SmoothCurve;
-	UPROPERTY(EditAnywhere, Category="MyTimeline") class UTimelineComponent* MyTimeline; // raw pointer? why can't this be a smartpointer? 
-	
+	UPROPERTY(EditAnywhere, Category="MyTimeline")
+	class UCurveFloat* SmoothCurve;
+	UPROPERTY(EditAnywhere, Category="MyTimeline")
+	class UTimelineComponent* MyTimeline; // raw pointer? why can't this be a smartpointer? 
+
 	//Coyote Timer
-	
-	UFUNCTION() void TimelineFloatReturn(float Value); //event?
-	UFUNCTION() void OnTimelineFinished();
+	UPROPERTY(VisibleAnywhere)
+	int CurrentLife;
 
-	FOnTimelineFloat InterpFunction {};
+	UFUNCTION()
+	void TimelineFloatReturn(float Value); //event?
+	UFUNCTION()
+	void OnTimelineFinished();
 
-	FOnTimelineEvent InterpFinished {};
-	
-	UPROPERTY() FVector StartLocation;
-	UPROPERTY() FVector EndLocation;
-	
+	FOnTimelineFloat InterpFunction{};
+
+	FOnTimelineEvent InterpFinished{};
+
+	UPROPERTY()
+	FVector StartLocation;
+	UPROPERTY()
+	FVector EndLocation;
+
+
+	UPROPERTY(VisibleAnywhere)
+	int32 playerNumber;
 	
 	const float MovementOffset = 300;
 	
@@ -44,17 +55,27 @@ public:
 		MovingLane,
 	};
 
+	void RemoveLife();
+
 protected:
-	virtual void Move(const FInputActionValue& Value) override;
 
 	virtual void Jump() override;
 
 	virtual void BeginPlay() override;
 
-private:
+	virtual void Move(const FInputActionValue& Value);
+	virtual void P2Move(const FInputActionValue& Value);
+
+	virtual void EscapeKey();
+	virtual void EnterKey();
+public:
+	UPROPERTY(VisibleAnywhere)
 	int CurrentPos;
+	TArray<float> SetPositions1;
+	TArray<float> SetPositions2;
+	float GetCorrectPosition(int ID, int Pos); 
 	CharacterState CurrentState;
+	void Die();
 	bool AllowedTransition(int DesiredPos);
+	bool CheckDirection(int DesiredPos, AEndlessCharacterController* Controller, int PlayerID);
 };
-
-
